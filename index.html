@@ -1,0 +1,897 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>DISEASE DETECTION FOR FISH SPECIES</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link href="https://fonts.googleapis.com/css?family=Montserrat:600,400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+  <style>
+    html, body {
+      min-height: 100vh;
+      margin: 0;
+      padding: 0;
+    }
+    :root {
+      --main-bg: linear-gradient(120deg, rgba(0, 123, 193, 0.55) 0%, rgba(0, 198, 251, 0.35) 100%), url('https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=1200&q=80') no-repeat center center fixed;
+      --container-bg: rgba(255,255,255,0.92);
+      --header-bg: rgba(0, 114, 181, 0.85);
+      --text-main: #2a4d69;
+      --accent: #0072B5;
+      --accent2: #00c6fb;
+      --border: #00a6d6;
+      --shadow: 0 12px 40px rgba(0,114,181,0.13), 0 2px 8px rgba(0,0,0,0.04);
+      --footer: #0072B5;
+      --footer-hover: #00c6fb;
+      --container-blur: blur(10px);
+      --transition: background 0.5s, color 0.5s;
+    }
+    body.theme-dark {
+      --main-bg: linear-gradient(120deg, rgba(0, 0, 0, 0.85) 0%, rgba(0, 114, 181, 0.75) 100%), url('https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=1200&q=80') no-repeat center center fixed;
+      --container-bg: rgba(30,40,60,0.97);
+      --header-bg: rgba(0, 114, 181, 0.95);
+      --text-main: #eaf4fb;
+      --accent: #00c6fb;
+      --accent2: #0072B5;
+      --border: #00c6fb;
+      --shadow: 0 12px 40px rgba(0,114,181,0.25), 0 2px 8px rgba(0,0,0,0.14);
+      --footer: #eaf4fb;
+      --footer-hover: #00c6fb;
+      --container-blur: blur(0px);
+    }
+    body.theme-green {
+      --main-bg: linear-gradient(120deg, rgba(0, 193, 123, 0.55) 0%, rgba(0, 251, 198, 0.35) 100%), url('https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=1200&q=80') no-repeat center center fixed;
+      --container-bg: rgba(255,255,255,0.92);
+      --header-bg: rgba(0, 181, 114, 0.85);
+      --text-main: #2a694d;
+      --accent: #00B572;
+      --accent2: #00fbb2;
+      --border: #00d6a6;
+      --shadow: 0 12px 40px rgba(0,181,114,0.13), 0 2px 8px rgba(0,0,0,0.04);
+      --footer: #00B572;
+      --footer-hover: #00fbb2;
+      --container-blur: blur(10px);
+    }
+    body.theme-purple {
+      --main-bg: linear-gradient(120deg, rgba(123, 0, 193, 0.55) 0%, rgba(198, 0, 251, 0.35) 100%), url('https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=1200&q=80') no-repeat center center fixed;
+      --container-bg: rgba(255,255,255,0.92);
+      --header-bg: rgba(114, 0, 181, 0.85);
+      --text-main: #4d2a69;
+      --accent: #7200B5;
+      --accent2: #c600fb;
+      --border: #a600d6;
+      --shadow: 0 12px 40px rgba(114,0,181,0.13), 0 2px 8px rgba(0,0,0,0.04);
+      --footer: #7200B5;
+      --footer-hover: #c600fb;
+      --container-blur: blur(10px);
+    }
+    body {
+      background: var(--main-bg);
+      background-size: cover;
+      font-family: 'Montserrat', 'Segoe UI', Arial, sans-serif;
+      transition: var(--transition);
+      min-height: 100vh;
+      margin: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+    }
+    .header {
+      width: 100%;
+      background: var(--header-bg);
+      color: #fff;
+      padding: 38px 0 28px 0;
+      text-align: center;
+      box-shadow: 0 4px 24px rgba(0,114,181,0.10);
+      letter-spacing: 2px;
+      border-bottom-left-radius: 32px;
+      border-bottom-right-radius: 32px;
+      margin-bottom: 0;
+      backdrop-filter: blur(2px);
+      position: relative;
+      z-index: 2;
+      animation: fadeInDown 1s;
+    }
+    @keyframes fadeInDown {
+      from { opacity: 0; transform: translateY(-40px);}
+      to { opacity: 1; transform: translateY(0);}
+    }
+.header .logo {
+  width: 100px;
+  height: 100px;
+  background: url('https://img.icons8.com/color/120/fish--v2.png') no-repeat center/contain;
+  display: inline-block;
+  margin-bottom: 14px;
+  filter: drop-shadow(0 2px 8px #00c6fb55);
+  border-radius: 50%;
+  background-color: #fff;
+  box-shadow: 0 2px 12px rgba(0,114,181,0.10);
+  animation: float 2.5s infinite ease-in-out;
+    }
+    @keyframes float {
+      0%, 100% { transform: translateY(0);}
+      50% { transform: translateY(-12px);}
+    }
+    .header h1 {
+      margin: 0;
+      font-size: 2.5rem;
+      font-weight: 700;
+      letter-spacing: 1.5px;
+      text-shadow: 0 2px 8px #0072b555;
+    }
+    .header p {
+      margin: 12px 0 0 0;
+      font-size: 1.18rem;
+      font-weight: 400;
+      color: #e0eafc;
+      text-shadow: 0 1px 4px #0072b533;
+    }
+    .settings-btn {
+      position: absolute;
+      top: 24px;
+      left: 32px;
+      font-size: 1.3rem;
+      cursor: pointer;
+      color: #fff;
+      background: rgba(0,0,0,0.10);
+      border: none;
+      border-radius: 50%;
+      width: 38px;
+      height: 38px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background 0.2s;
+      z-index: 10;
+    }
+    .settings-btn:hover {
+      background: rgba(0,0,0,0.18);
+    }
+    .theme-switch {
+      position: absolute;
+      top: 24px;
+      right: 32px;
+      font-size: 1.3rem;
+      cursor: pointer;
+      color: #fff;
+      background: rgba(0,0,0,0.10);
+      border: none;
+      border-radius: 50%;
+      width: 38px;
+      height: 38px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background 0.2s;
+      z-index: 10;
+    }
+    .theme-switch:hover {
+      background: rgba(0,0,0,0.18);
+    }
+    .container {
+      max-width: 500px;
+      margin: -5px auto 0 auto;
+      background: var(--container-bg);
+      border-radius: 32px;
+      box-shadow: var(--shadow);
+      padding: 48px 32px 38px 32px;
+      text-align: center;
+      animation: fadeIn 1.2s;
+      position: relative;
+      z-index: 2;
+      backdrop-filter: var(--container-blur);
+      color: var(--text-main);
+      transition: var(--transition);
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(40px);}
+      to { opacity: 1; transform: translateY(0);}
+    }
+    .subtitle {
+      color: var(--text-main);
+      font-size: 1.13rem;
+      margin-bottom: 30px;
+      margin-top: 12px;
+      letter-spacing: 0.5px;
+    }
+    .info-btn {
+      background: none;
+      border: none;
+      color: var(--accent2);
+      font-size: 1.2rem;
+      margin-left: 8px;
+      cursor: pointer;
+      vertical-align: middle;
+      transition: color 0.2s;
+    }
+    .info-btn:hover { color: var(--accent); }
+    .drop-area {
+      border: 2.5px dashed var(--border);
+      border-radius: 18px;
+      background: rgba(234,244,251,0.7);
+      padding: 32px 12px;
+      margin-bottom: 18px;
+      cursor: pointer;
+      transition: border 0.2s, background 0.2s;
+      position: relative;
+    }
+    .drop-area.dragover {
+      border-color: var(--accent);
+      background: rgba(0,198,251,0.13);
+    }
+    .drop-area .fa-cloud-upload-alt {
+      font-size: 2.2rem;
+      color: var(--accent);
+      margin-bottom: 10px;
+    }
+    .drop-area-text {
+      color: var(--accent);
+      font-size: 1.08rem;
+      margin-bottom: 6px;
+      font-weight: 600;
+    }
+    .custom-file-upload {
+      display: inline-block;
+      padding: 13px 36px;
+      cursor: pointer;
+      background: linear-gradient(90deg, var(--accent) 60%, var(--accent2) 100%);
+      color: #fff;
+      border-radius: 14px;
+      font-size: 1.08rem;
+      font-weight: 700;
+      margin-top: 8px;
+      margin-bottom: 10px;
+      transition: background 0.2s, box-shadow 0.2s, transform 0.1s;
+      box-shadow: 0 4px 18px rgba(0,114,181,0.13);
+      border: none;
+      outline: none;
+      letter-spacing: 1.2px;
+      position: relative;
+      overflow: hidden;
+    }
+    .custom-file-upload:active {
+      transform: scale(0.97);
+    }
+    .custom-file-upload:hover, .custom-file-upload:focus {
+      background: linear-gradient(90deg, #005a8c 60%, #00a6d6 100%);
+      box-shadow: 0 6px 24px rgba(0,114,181,0.18);
+    }
+    #file-upload {
+      display: none;
+    }
+    .image-preview {
+      margin: 22px auto 0 auto;
+      display: none;
+      max-width: 270px;
+      max-height: 190px;
+      border-radius: 18px;
+      box-shadow: 0 4px 18px rgba(0,114,181,0.13);
+      border: 2.5px solid #eaf4fb;
+      background: #f8fafc;
+      object-fit: cover;
+      animation: fadeIn 0.7s;
+      cursor: zoom-in;
+      transition: box-shadow 0.2s;
+    }
+    .image-preview.enlarged {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      z-index: 9999;
+      transform: translate(-50%, -50%) scale(2.2);
+      box-shadow: 0 8px 48px rgba(0,0,0,0.25);
+      border: 4px solid var(--accent2);
+      background: #fff;
+      max-width: 90vw;
+      max-height: 80vh;
+      cursor: zoom-out;
+      animation: fadeIn 0.3s;
+    }
+    .prediction-box {
+      background: rgba(234,244,251,0.97);
+      border-radius: 20px;
+      padding: 36px 14px;
+      border: 2.5px solid var(--accent);
+      text-align: center;
+      margin-top: 38px;
+      min-height: 60px;
+      font-size: 1.20rem;
+      transition: background 0.2s, border 0.2s;
+      box-shadow: 0 2px 12px rgba(0,114,181,0.09);
+      font-weight: 500;
+      animation: fadeIn 0.7s;
+      color: var(--text-main);
+    }
+    .confidence {
+      color: var(--accent);
+      font-weight: 700;
+      margin-top: 14px;
+      font-size: 1.18rem;
+      letter-spacing: 0.5px;
+    }
+    .history-title {
+      margin-top: 36px;
+      font-size: 1.08rem;
+      color: var(--accent);
+      font-weight: 700;
+      letter-spacing: 1px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .clear-history-btn {
+      background: none;
+      border: none;
+      color: var(--accent2);
+      font-size: 1.1rem;
+      cursor: pointer;
+      margin-left: 8px;
+      transition: color 0.2s;
+    }
+    .clear-history-btn:hover { color: var(--accent); }
+    .download-history-btn {
+      background: none;
+      border: none;
+      color: var(--accent2);
+      font-size: 1.1rem;
+      cursor: pointer;
+      margin-left: 8px;
+      transition: color 0.2s;
+    }
+    .download-history-btn:hover { color: var(--accent); }
+    .history-list {
+      list-style: none;
+      padding: 0;
+      margin: 12px 0 0 0;
+      text-align: left;
+    }
+    .history-list li {
+      background: #f8fafc;
+      border-left: 4px solid var(--accent2);
+      margin-bottom: 10px;
+      padding: 10px 16px;
+      border-radius: 10px;
+      font-size: 1rem;
+      box-shadow: 0 1px 6px rgba(0,114,181,0.06);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      animation: fadeIn 0.7s;
+    }
+    .history-list .confidence {
+      margin: 0;
+      font-size: 1rem;
+      color: var(--accent);
+      font-weight: 600;
+    }
+    .history-list .timestamp {
+      font-size: 0.85rem;
+      color: #888;
+      margin-left: 12px;
+      font-style: italic;
+    }
+    .spinner {
+      display: inline-block;
+      width: 36px;
+      height: 36px;
+      border: 4px solid #eaf4fb;
+      border-top: 4px solid var(--accent);
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+      margin-top: 10px;
+    }
+    @keyframes spin {
+      0% { transform: rotate(0deg);}
+      100% { transform: rotate(360deg);}
+    }
+    .footer {
+      margin-top: 48px;
+      color: var(--footer);
+      font-size: 1rem;
+      opacity: 0.7;
+      text-align: center;
+      letter-spacing: 1px;
+      padding-bottom: 24px;
+    }
+    .footer .fa {
+      margin: 0 8px;
+      color: var(--footer-hover);
+      transition: color 0.2s;
+    }
+    .footer .fa:hover {
+      color: var(--footer);
+    }
+    .toast {
+      position: fixed;
+      top: 24px;
+      right: 24px;
+      background: #fff;
+      color: #0072B5;
+      border-radius: 8px;
+      box-shadow: 0 2px 12px rgba(0,114,181,0.13);
+      padding: 16px 28px;
+      font-size: 1.08rem;
+      z-index: 9999;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.4s, top 0.4s;
+    }
+    .toast.show {
+      opacity: 1;
+      pointer-events: auto;
+      top: 48px;
+    }
+    .modal-bg {
+      display: none;
+      position: fixed;
+      z-index: 10000;
+      left: 0; top: 0; width: 100vw; height: 100vh;
+      background: rgba(0,0,0,0.35);
+      align-items: center;
+      justify-content: center;
+    }
+    .modal-bg.active { display: flex; }
+    .modal {
+      background: #fff;
+      color: #222;
+      border-radius: 18px;
+      padding: 32px 28px;
+      max-width: 400px;
+      box-shadow: 0 8px 32px rgba(0,114,181,0.18);
+      text-align: left;
+      animation: fadeIn 0.4s;
+      position: relative;
+    }
+    .modal .close-modal {
+      position: absolute;
+      top: 12px;
+      right: 16px;
+      background: none;
+      border: none;
+      font-size: 1.3rem;
+      color: #0072B5;
+      cursor: pointer;
+    }
+    .settings-panel-bg {
+      display: none;
+      position: fixed;
+      z-index: 10001;
+      left: 0; top: 0; width: 100vw; height: 100vh;
+      background: rgba(0,0,0,0.25);
+      align-items: center;
+      justify-content: center;
+    }
+    .settings-panel-bg.active { display: flex; }
+    .settings-panel {
+      background: #fff;
+      color: #222;
+      border-radius: 18px;
+      padding: 32px 28px;
+      max-width: 340px;
+      box-shadow: 0 8px 32px rgba(0,114,181,0.18);
+      text-align: left;
+      animation: fadeIn 0.4s;
+      position: relative;
+    }
+    .settings-panel h2 {
+      color: var(--accent);
+      margin-top: 0;
+      font-size: 1.25rem;
+    }
+    .settings-panel label {
+      display: block;
+      margin: 18px 0 8px 0;
+      font-weight: 600;
+      color: #333;
+    }
+    .settings-panel select, .settings-panel input[type="checkbox"] {
+      margin-right: 8px;
+      font-size: 1rem;
+    }
+    .settings-panel .close-settings {
+      position: absolute;
+      top: 12px;
+      right: 16px;
+      background: none;
+      border: none;
+      font-size: 1.3rem;
+      color: #0072B5;
+      cursor: pointer;
+    }
+    .theme-thumbnails {
+      display: flex;
+      gap: 10px;
+      margin: 10px 0 18px 0;
+    }
+    .theme-thumb {
+      width: 38px;
+      height: 38px;
+      border-radius: 8px;
+      border: 2px solid #eee;
+      cursor: pointer;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+      transition: border 0.2s, box-shadow 0.2s;
+      outline: none;
+      background-size: cover;
+      background-position: center;
+    }
+    .theme-thumb.selected, .theme-thumb:focus {
+      border: 2.5px solid var(--accent);
+      box-shadow: 0 4px 16px rgba(0,114,181,0.13);
+    }
+    .settings-panel .reset-btn {
+      margin-top: 18px;
+      background: var(--accent2);
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      padding: 8px 18px;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    .settings-panel .reset-btn:hover {
+      background: var(--accent);
+    }
+    .settings-panel .bg-upload-label {
+      display: block;
+      margin: 18px 0 8px 0;
+      font-weight: 600;
+      color: #333;
+      cursor: pointer;
+    }
+    .settings-panel input[type="file"] {
+      display: none;
+    }
+    @media (max-width: 600px) {
+      .container { padding: 18px 6px; }
+      .prediction-box { padding: 16px 4px; }
+      .header h1 { font-size: 1.3rem; }
+      .header { padding: 20px 0 14px 0; }
+      .header .logo { width: 60px; height: 60px; }
+      .modal, .settings-panel { padding: 18px 8px; }
+      .theme-thumbnails { gap: 4px; }
+      .theme-thumb { width: 28px; height: 28px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <button class="settings-btn" id="settings-btn" aria-label="Settings"><i class="fas fa-cog"></i></button>
+    <span class="logo" aria-label="Fish Logo"></span>
+    <h1>DISEASE DETECTION FOR FISH SPECIES</h1>
+    <button class="theme-switch" id="theme-switch" aria-label="Switch theme"><i class="fas fa-moon"></i></button>
+  </div>
+  <div class="container">
+    <div class="subtitle">
+      Upload a fish image to detect possible diseases
+      <button class="info-btn" id="info-btn" aria-label="About this model"><i class="fas fa-info-circle"></i></button>
+    </div>
+    <div class="drop-area" id="drop-area" tabindex="0" aria-label="Drop area for image upload">
+      <i class="fas fa-cloud-upload-alt"></i>
+      <div class="drop-area-text">Drag &amp; drop an image here, or</div>
+      <label for="file-upload" class="custom-file-upload">
+        <i class="fas fa-upload"></i> Choose Image
+      </label>
+      <input id="file-upload" type="file" accept="image/*" aria-label="Upload image"/>
+    </div>
+    <img id="preview" class="image-preview" alt="Image Preview"/>
+    <div class="prediction-box" id="prediction-box">
+      Please upload an image to get a prediction.
+    </div>
+    <div class="history-title">
+      Prediction History
+      <button class="clear-history-btn" id="clear-history-btn" aria-label="Clear history"><i class="fas fa-trash"></i></button>
+      <button class="download-history-btn" id="download-history-btn" aria-label="Download history"><i class="fas fa-download"></i></button>
+    </div>
+    <ul class="history-list" id="history-list"></ul>
+  </div>
+  <div class="footer">
+    &copy; 2025 Freshwater Fish Disease Classifier &mdash; Designed for Aquaculture Health
+    <br>
+    <a href="mailto:your@email.com" title="Contact"><i class="fa fa-envelope"></i></a>
+    <a href="https://github.com/yourprofile" target="_blank" title="GitHub"><i class="fab fa-github"></i></a>
+    <a href="https://twitter.com/yourprofile" target="_blank" title="Twitter"><i class="fab fa-twitter"></i></a>
+  </div>
+  <div class="toast" id="toast"></div>
+  <div class="modal-bg" id="modal-bg" aria-modal="true" role="dialog">
+    <div class="modal">
+      <button class="close-modal" id="close-modal" aria-label="Close">&times;</button>
+      <h2 style="color:#0072B5;">About This Classifier</h2>
+      <p>
+        This AI model detects common freshwater fish diseases from images. It supports aquaculture health by providing fast, automated diagnosis for:<br>
+        <b>Bacterial Red Disease, Epizootic Ulcerative Syndrome, Fin Rot, Fish Lice, White Spot, and Healthy fish</b>.<br>
+        <br>
+        <b>How to use:</b> Upload or drag &amp; drop a clear image of a fish. The model will predict the disease and show confidence. You can switch between multiple color themes for your comfort.
+      </p>
+    </div>
+  </div>
+  <div class="settings-panel-bg" id="settings-panel-bg" aria-modal="true" role="dialog">
+    <div class="settings-panel">
+      <button class="close-settings" id="close-settings" aria-label="Close">&times;</button>
+      <h2>Settings</h2>
+      <label for="theme-select">Theme:</label>
+      <div class="theme-thumbnails">
+        <div class="theme-thumb" tabindex="0" aria-label="Default Blue Theme" id="thumb-blue"
+          style="background:linear-gradient(120deg, rgba(0, 123, 193, 0.55) 0%, rgba(0, 198, 251, 0.35) 100%), #fff;"></div>
+        <div class="theme-thumb" tabindex="0" aria-label="Dark Theme" id="thumb-dark"
+          style="background:linear-gradient(120deg, rgba(0, 0, 0, 0.85) 0%, rgba(0, 114, 181, 0.75) 100%), #222;"></div>
+        <div class="theme-thumb" tabindex="0" aria-label="Green Theme" id="thumb-green"
+          style="background:linear-gradient(120deg, rgba(0, 193, 123, 0.55) 0%, rgba(0, 251, 198, 0.35) 100%), #fff;"></div>
+        <div class="theme-thumb" tabindex="0" aria-label="Purple Theme" id="thumb-purple"
+          style="background:linear-gradient(120deg, rgba(123, 0, 193, 0.55) 0%, rgba(198, 0, 251, 0.35) 100%), #fff;"></div>
+      </div>
+      <select id="theme-select" aria-label="Theme select">
+        <option value="">Default Blue</option>
+        <option value="theme-dark">Dark</option>
+        <option value="theme-green">Green</option>
+        <option value="theme-purple">Purple</option>
+      </select>
+      <label class="bg-upload-label" for="bg-upload">
+        <i class="fas fa-image"></i> Custom Background Image
+        <input type="file" id="bg-upload" accept="image/*" aria-label="Upload background image"/>
+      </label>
+      <label>
+        <input type="checkbox" id="glass-toggle" checked>
+        Glassmorphism Effect
+      </label>
+      <button class="reset-btn" id="reset-btn" type="button">Reset to Default</button>
+    </div>
+  </div>
+  <script>
+    // Theme Switcher (quick toggle dark)
+    const themeSwitch = document.getElementById('theme-switch');
+    themeSwitch.addEventListener('click', () => {
+      if(document.body.classList.contains('theme-dark')) {
+        document.body.classList.remove('theme-dark');
+        themeSwitch.innerHTML = '<i class="fas fa-moon"></i>';
+        document.getElementById('theme-select').value = '';
+        selectThumb('thumb-blue');
+      } else {
+        document.body.classList.add('theme-dark');
+        themeSwitch.innerHTML = '<i class="fas fa-sun"></i>';
+        document.getElementById('theme-select').value = 'theme-dark';
+        selectThumb('thumb-dark');
+      }
+    });
+
+    // Theme thumbnails
+    function selectThumb(id) {
+      document.querySelectorAll('.theme-thumb').forEach(t => t.classList.remove('selected'));
+      document.getElementById(id).classList.add('selected');
+    }
+    document.getElementById('thumb-blue').onclick = () => {
+      document.body.className = '';
+      document.getElementById('theme-select').value = '';
+      themeSwitch.innerHTML = '<i class="fas fa-moon"></i>';
+      selectThumb('thumb-blue');
+    };
+    document.getElementById('thumb-dark').onclick = () => {
+      document.body.className = 'theme-dark';
+      document.getElementById('theme-select').value = 'theme-dark';
+      themeSwitch.innerHTML = '<i class="fas fa-sun"></i>';
+      selectThumb('thumb-dark');
+    };
+    document.getElementById('thumb-green').onclick = () => {
+      document.body.className = 'theme-green';
+      document.getElementById('theme-select').value = 'theme-green';
+      themeSwitch.innerHTML = '<i class="fas fa-moon"></i>';
+      selectThumb('thumb-green');
+    };
+    document.getElementById('thumb-purple').onclick = () => {
+      document.body.className = 'theme-purple';
+      document.getElementById('theme-select').value = 'theme-purple';
+      themeSwitch.innerHTML = '<i class="fas fa-moon"></i>';
+      selectThumb('thumb-purple');
+    };
+
+    // Keyboard accessibility for theme thumbnails
+    document.querySelectorAll('.theme-thumb').forEach(thumb => {
+      thumb.addEventListener('keydown', e => {
+        if (e.key === 'Enter' || e.key === ' ') thumb.click();
+      });
+    });
+
+    // Settings Panel
+    const settingsBtn = document.getElementById('settings-btn');
+    const settingsPanelBg = document.getElementById('settings-panel-bg');
+    const closeSettings = document.getElementById('close-settings');
+    const themeSelect = document.getElementById('theme-select');
+    const glassToggle = document.getElementById('glass-toggle');
+    const resetBtn = document.getElementById('reset-btn');
+    settingsBtn.onclick = () => settingsPanelBg.classList.add('active');
+    closeSettings.onclick = () => settingsPanelBg.classList.remove('active');
+    settingsPanelBg.onclick = (e) => { if (e.target === settingsPanelBg) settingsPanelBg.classList.remove('active'); };
+
+    themeSelect.onchange = function() {
+      document.body.className = this.value;
+      if(this.value === 'theme-dark') {
+        themeSwitch.innerHTML = '<i class="fas fa-sun"></i>';
+        selectThumb('thumb-dark');
+      } else if(this.value === 'theme-green') {
+        themeSwitch.innerHTML = '<i class="fas fa-moon"></i>';
+        selectThumb('thumb-green');
+      } else if(this.value === 'theme-purple') {
+        themeSwitch.innerHTML = '<i class="fas fa-moon"></i>';
+        selectThumb('thumb-purple');
+      } else {
+        themeSwitch.innerHTML = '<i class="fas fa-moon"></i>';
+        selectThumb('thumb-blue');
+      }
+    };
+    glassToggle.onchange = function() {
+      document.querySelector('.container').style.backdropFilter = this.checked ? 'blur(10px)' : 'none';
+    };
+    resetBtn.onclick = function() {
+      document.body.className = '';
+      themeSwitch.innerHTML = '<i class="fas fa-moon"></i>';
+      document.getElementById('theme-select').value = '';
+      selectThumb('thumb-blue');
+      document.querySelector('.container').style.backdropFilter = 'blur(10px)';
+      document.body.style.backgroundImage = '';
+      showToast("Reset to default.", true);
+    };
+
+    // Custom background image upload
+    document.getElementById('bg-upload').addEventListener('change', function(e) {
+      const file = e.target.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = function(ev) {
+        document.body.style.backgroundImage = `linear-gradient(120deg, rgba(0, 123, 193, 0.35) 0%, rgba(0, 198, 251, 0.20) 100%), url('${ev.target.result}')`;
+        showToast("Custom background set!", true);
+      };
+      reader.readAsDataURL(file);
+    });
+
+    // Modal Info
+    const infoBtn = document.getElementById('info-btn');
+    const modalBg = document.getElementById('modal-bg');
+    const closeModal = document.getElementById('close-modal');
+    infoBtn.onclick = () => modalBg.classList.add('active');
+    closeModal.onclick = () => modalBg.classList.remove('active');
+    modalBg.onclick = (e) => { if (e.target === modalBg) modalBg.classList.remove('active'); };
+
+    // Toast Notification
+    function showToast(msg, success=true) {
+      const toast = document.getElementById('toast');
+      toast.textContent = msg;
+      toast.style.background = success ? "#eaf4fb" : "#ffd6d6";
+      toast.style.color = success ? "#0072B5" : "#b50000";
+      toast.classList.add('show');
+      setTimeout(() => toast.classList.remove('show'), 3000);
+    }
+
+    // Drag & drop and file upload
+    const fileInput = document.getElementById('file-upload');
+    const dropArea = document.getElementById('drop-area');
+    const previewImg = document.getElementById('preview');
+    const predictionBox = document.getElementById('prediction-box');
+    const historyList = document.getElementById('history-list');
+    const clearHistoryBtn = document.getElementById('clear-history-btn');
+    const downloadHistoryBtn = document.getElementById('download-history-btn');
+    let predictionHistory = [];
+
+    dropArea.addEventListener('dragover', (e) => {
+      e.preventDefault();
+      dropArea.classList.add('dragover');
+    });
+    dropArea.addEventListener('dragleave', (e) => {
+      e.preventDefault();
+      dropArea.classList.remove('dragover');
+    });
+    dropArea.addEventListener('drop', (e) => {
+      e.preventDefault();
+      dropArea.classList.remove('dragover');
+      const files = e.dataTransfer.files;
+      if (files && files[0]) {
+        handleFile(files[0]);
+      }
+    });
+    dropArea.addEventListener('click', () => fileInput.click());
+
+    fileInput.addEventListener('change', function(event) {
+      const file = event.target.files[0];
+      if (!file) return;
+      handleFile(file);
+    });
+
+    // Image preview zoom
+    previewImg.addEventListener('click', function() {
+      if (!previewImg.src) return;
+      previewImg.classList.toggle('enlarged');
+    });
+
+    // Clear history
+    clearHistoryBtn.onclick = function() {
+      predictionHistory = [];
+      renderHistory();
+      showToast("Prediction history cleared.", true);
+    };
+
+    // Download history as CSV
+    downloadHistoryBtn.onclick = function() {
+      if (predictionHistory.length === 0) {
+        showToast("No history to download.", false);
+        return;
+      }
+      let csv = "Class,Confidence,Time\n";
+      predictionHistory.forEach(item => {
+        csv += `"${item.class}",${item.confidence.toFixed(2)}%,"${item.time}"\n`;
+      });
+      const blob = new Blob([csv], {type: "text/csv"});
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = "prediction_history.csv";
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+      showToast("History downloaded.", true);
+    };
+
+    function handleFile(file) {
+      // Show image preview
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        previewImg.src = e.target.result;
+        previewImg.style.display = 'block';
+        previewImg.classList.remove('enlarged');
+      };
+      reader.readAsDataURL(file);
+
+      const formData = new FormData();
+      formData.append('file', file);
+
+      predictionBox.innerHTML = `<div class="spinner"></div><div style="margin-top:10px;">Predicting...</div>`;
+
+      fetch('http://localhost:5000/predict', {
+        method: 'POST',
+        body: formData
+      })
+      .then(response => response.json())
+      .then(data => {
+        if (data.error) {
+          predictionBox.innerHTML = `<span style="color:red;">${data.error}</span>`;
+          showToast(data.error, false);
+        } else {
+          predictionBox.innerHTML =
+            `<h2 style="color:var(--accent); margin-bottom:8px;">${data.class}</h2>
+             <div class="confidence">Confidence: <b>${data.confidence.toFixed(2)}%</b></div>`;
+          addToHistory(data.class, data.confidence);
+          showToast("Prediction successful!", true);
+        }
+      })
+      .catch(error => {
+        predictionBox.innerHTML =
+          `<span style="color:red;">Error: ${error}</span>`;
+        showToast("Prediction failed. Please try again.", false);
+      });
+    }
+
+    function addToHistory(predClass, confidence) {
+      const now = new Date();
+      const timestamp = now.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit', second:'2-digit'});
+      predictionHistory.unshift({class: predClass, confidence: confidence, time: timestamp});
+      if (predictionHistory.length > 3) predictionHistory.pop();
+      renderHistory();
+    }
+
+    function renderHistory() {
+      historyList.innerHTML = '';
+      predictionHistory.forEach(item => {
+        const li = document.createElement('li');
+        li.innerHTML = `<span>${item.class}</span>
+          <span class="confidence">${item.confidence.toFixed(2)}%</span>
+          <span class="timestamp">${item.time}</span>`;
+        historyList.appendChild(li);
+      });
+    }
+    // Set initial theme thumb
+    selectThumb('thumb-blue');
+  </script>
+</body>
+</html>
+
